@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HeOCR/hletterscript/schemas/entry.schema.json",
+  "title": "Handwritten Hebrew Per-Letter Image Entry",
+  "description": "One row per cropped per-letter image. Each entry is a derivative of a specific upstream scan in HeOCR/public-domain-hand-written-hebrew-scans.",
+  "type": "object",
+  "required": [
+    "entry_id",
+    "writer_id",
+    "letter",
+    "upstream",
+    "image",
+    "extraction",
+    "rights",
+    "quality"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "rights": {
+            "properties": {
+              "verification_status": {
+                "enum": ["unverified", "source_note_only", "conflicting"]
+              }
+            },
+            "required": ["verification_status"]
+          }
+        },
+        "required": ["rights"]
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "properties": {
+              "commercial_use_allowed": {
+                "not": {
+                  "const": true
+                }
+              },
+              "derivatives_allowed": {
+                "not": {
+                  "const": true
+                }
+              },
+              "redistribution_allowed": {
+                "not": {
+                  "const": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rights": {
+            "properties": {
+              "attribution_required": {
+                "const": true
+              }
+            },
+            "required": ["attribution_required"]
+          }
+        },
+        "required": ["rights"]
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "properties": {
+              "attribution_text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "attribution_url": {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              }
+            },
+            "required": ["attribution_text", "attribution_url"]
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "entry_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*__[a-z][a-z0-9_]*__v[0-9]{4}$",
+      "description": "Format: <writer_id>__<letter.name>__v<4-digit variant>."
+    },
+    "writer_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+    },
+    "letter": {
+      "type": "object",
+      "required": ["codepoint", "unicode_char", "name", "form"],
+      "additionalProperties": false,
+      "properties": {
+        "codepoint": {
+          "type": "string",
+          "pattern": "^U\\+05[D-E][0-9A-F]$",
+          "description": "Hebrew block U+05D0..U+05EA only."
+        },
+        "unicode_char": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "alef", "bet", "gimel", "dalet", "he", "vav", "zayin", "het",
+            "tet", "yod", "kaf", "kaf_final", "lamed", "mem", "mem_final",
+            "nun", "nun_final", "samekh", "ayin", "pe", "pe_final",
+            "tsadi", "tsadi_final", "qof", "resh", "shin", "tav"
+          ]
+        },
+        "form": {
+          "type": "string",
+          "enum": ["regular", "final"]
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "description": "Reference back to the scan in HeOCR/public-domain-hand-written-hebrew-scans this crop was extracted from.",
+      "required": ["repo", "source_id", "entry_id", "sha256", "commit", "bbox"],
+      "additionalProperties": false,
+      "properties": {
+        "repo": {
+          "type": "string",
+          "format": "uri",
+          "description": "Canonical https URL of the upstream repository. Must equal https://github.com/HeOCR/public-domain-hand-written-hebrew-scans."
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:__[a-z0-9_]+)+$"
+        },
+        "entry_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:__[a-z0-9_]+)+__p[0-9]{4,6}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{40}|release:v[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.]+)?)$",
+          "description": "40-char upstream commit sha or release:vMAJOR.MINOR.PATCH."
+        },
+        "bbox": {
+          "type": "object",
+          "required": ["x", "y", "w", "h"],
+          "additionalProperties": false,
+          "properties": {
+            "x": {"type": "integer", "minimum": 0},
+            "y": {"type": "integer", "minimum": 0},
+            "w": {"type": "integer", "minimum": 1},
+            "h": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": [
+        "local_path",
+        "sha256",
+        "mime_type",
+        "bytes",
+        "width_px",
+        "height_px",
+        "background"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "local_path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repo-relative path under data/letters/."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "mime_type": {
+          "type": "string",
+          "enum": ["image/png", "image/jpeg", "image/webp", "image/tiff"]
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "width_px": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height_px": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "background": {
+          "type": "string",
+          "enum": ["original", "white", "transparent"],
+          "description": "Whether the crop preserves the page background, has been bleached to white, or has an alpha channel."
+        }
+      }
+    },
+    "extraction": {
+      "type": "object",
+      "required": [
+        "tool",
+        "tool_version",
+        "method",
+        "extracted_at",
+        "extracted_by",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tool": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Typically 'hletterscriptgen' or a sub-tool name."
+        },
+        "tool_version": {
+          "type": "string",
+          "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.]+)?$"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["manual", "auto", "mixed"]
+        },
+        "extracted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "extracted_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "description": "Inherited from the upstream scan entry; the crop is a derivative.",
+      "required": [
+        "rights_basis",
+        "license_expression",
+        "commercial_use_allowed",
+        "derivatives_allowed",
+        "redistribution_allowed",
+        "attribution_required",
+        "attribution_text",
+        "attribution_url",
+        "verification_status",
+        "evidence_text",
+        "verified_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rights_basis": {
+          "type": "string",
+          "enum": ["public_domain", "cc0", "cc_by", "cc_by_sa", "unknown"]
+        },
+        "license_expression": {
+          "type": ["string", "null"]
+        },
+        "commercial_use_allowed": {
+          "type": ["boolean", "null"]
+        },
+        "derivatives_allowed": {
+          "type": ["boolean", "null"]
+        },
+        "redistribution_allowed": {
+          "type": ["boolean", "null"]
+        },
+        "attribution_required": {
+          "type": ["boolean", "null"]
+        },
+        "attribution_text": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "attribution_url": {
+          "type": ["string", "null"],
+          "format": "uri"
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": [
+            "unverified",
+            "source_note_only",
+            "inherited_from_upstream",
+            "primary_page_checked",
+            "conflicting",
+            "rejected"
+          ]
+        },
+        "evidence_text": {
+          "type": ["string", "null"]
+        },
+        "verified_at": {
+          "type": ["string", "null"],
+          "format": "date"
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "usable_for_htr",
+        "usable_for_syngen",
+        "legibility",
+        "exclusion_reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "usable_for_htr": {
+          "type": ["boolean", "null"],
+          "description": "Suitable as ground truth for handwritten text recognition training."
+        },
+        "usable_for_syngen": {
+          "type": ["boolean", "null"],
+          "description": "Suitable as a glyph for HeOCR/hocrsyngen synthetic-document generation."
+        },
+        "legibility": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "unknown"]
+        },
+        "exclusion_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      }
+    }
+  }
+}

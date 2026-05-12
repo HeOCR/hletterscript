@@ -1,0 +1,73 @@
+{
+  "contributors": [
+    {
+      "role": "maintainer",
+      "title": "Shay Palachy-Affek"
+    }
+  ],
+  "description": "Per-letter image crops of handwritten Hebrew letters, grouped into sets by writer. Each crop is a derivative of a permissively-licensed upstream scan in HeOCR/public-domain-hand-written-hebrew-scans, with per-image rights inherited and attribution recorded. The index is line-oriented JSON (JSONL).",
+  "homepage": "https://github.com/HeOCR/hletterscript",
+  "keywords": [
+    "Hebrew",
+    "dataset",
+    "glyphs",
+    "handwriting",
+    "handwritten-text-recognition",
+    "letters",
+    "public-domain",
+    "synthetic-generation"
+  ],
+  "licenses": [
+    {
+      "name": "CC0-1.0",
+      "path": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "scope": "metadata",
+      "title": "Creative Commons Zero v1.0 Universal"
+    }
+  ],
+  "name": "hletterscript",
+  "profile": "data-package",
+  "released_at": "2026-05-12T00:00:00Z",
+  "resources": [
+    {
+      "bytes": 0,
+      "description": "Per-letter image index. One JSON object per cropped letter image, with upstream provenance, extraction provenance, file checksums, and inherited rights.",
+      "encoding": "utf-8",
+      "format": "jsonl",
+      "mediatype": "application/x-ndjson",
+      "name": "entries",
+      "path": "data/index/entries.jsonl",
+      "profile": "data-resource",
+      "record_count": 0
+    },
+    {
+      "bytes": 0,
+      "description": "Writer-level catalog. One JSON object per writer; each writer defines a 'set' of letter images.",
+      "encoding": "utf-8",
+      "format": "jsonl",
+      "mediatype": "application/x-ndjson",
+      "name": "writers",
+      "path": "data/index/writers.jsonl",
+      "profile": "data-resource",
+      "record_count": 0
+    }
+  ],
+  "schemas": {
+    "entry": "https://github.com/HeOCR/hletterscript/blob/main/schemas/entry.schema.json",
+    "writer": "https://github.com/HeOCR/hletterscript/blob/main/schemas/writer.schema.json"
+  },
+  "stats": {
+    "attribution_required_count": 0,
+    "entry_writer_count": 0,
+    "image_byte_count": 0,
+    "letter_breakdown": {},
+    "license_breakdown": {},
+    "record_count": 0,
+    "writer_breakdown": {},
+    "writer_record_count": 0,
+    "writer_status_breakdown": {}
+  },
+  "title": "Hebrew Handwritten Per-Letter Image Dataset",
+  "upstream_repo": "https://github.com/HeOCR/public-domain-hand-written-hebrew-scans",
+  "version": "0.0.0-rc"
+}
