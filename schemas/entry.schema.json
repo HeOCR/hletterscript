@@ -86,6 +86,32 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "image": {
+            "properties": {
+              "background": {
+                "const": "transparent"
+              }
+            },
+            "required": ["background"]
+          }
+        },
+        "required": ["image"]
+      },
+      "then": {
+        "properties": {
+          "image": {
+            "properties": {
+              "mime_type": {
+                "enum": ["image/png", "image/webp", "image/tiff"]
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "properties": {
@@ -105,8 +131,7 @@
       "properties": {
         "codepoint": {
           "type": "string",
-          "pattern": "^U\\+05[D-E][0-9A-F]$",
-          "description": "Hebrew block U+05D0..U+05EA only."
+          "description": "Hebrew Unicode codepoint of the letter (e.g. 'U+05D0'). Cross-validated against the canonical LETTER_TABLE by scripts/validate_indexes.py — no schema-level regex, since the table is the canonical source of truth."
         },
         "unicode_char": {
           "type": "string",
@@ -126,6 +151,23 @@
           "type": "string",
           "enum": ["regular", "final"]
         },
+        "style": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "cursive_ashkenazi",
+            "cursive_sephardi",
+            "cursive_mizrahi",
+            "cursive_yemenite",
+            "block_ashkenazi",
+            "block_sephardi",
+            "block_modern",
+            "rashi",
+            "yiddish_handwriting",
+            "other"
+          ],
+          "description": "Per-image handwriting style. Optional. Downstream syngen and HTR consumers should filter on this when style consistency matters."
+        },
         "notes": {
           "type": ["string", "null"]
         }
@@ -133,15 +175,10 @@
     },
     "upstream": {
       "type": "object",
-      "description": "Reference back to the scan in HeOCR/public-domain-hand-written-hebrew-scans this crop was extracted from.",
-      "required": ["repo", "source_id", "entry_id", "sha256", "commit", "bbox"],
+      "description": "Reference back to the scan in HeOCR/public-domain-hand-written-hebrew-scans this crop was extracted from. The upstream repository URL is recorded once in scripts/release_recipe.json (`upstream_repo`); it is not duplicated on every entry.",
+      "required": ["source_id", "entry_id", "sha256", "commit", "bbox"],
       "additionalProperties": false,
       "properties": {
-        "repo": {
-          "type": "string",
-          "format": "uri",
-          "description": "Canonical https URL of the upstream repository. Must equal https://github.com/HeOCR/public-domain-hand-written-hebrew-scans."
-        },
         "source_id": {
           "type": "string",
           "pattern": "^[a-z0-9]+(?:__[a-z0-9_]+)+$"
@@ -152,12 +189,18 @@
         },
         "sha256": {
           "type": "string",
-          "pattern": "^[a-f0-9]{64}$"
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 of the upstream scan file at the time of extraction. The validator (with --upstream-path) re-checks this against the live upstream entry to catch upstream re-encodes."
         },
         "commit": {
           "type": "string",
-          "pattern": "^(?:[a-f0-9]{40}|release:v[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.]+)?)$",
-          "description": "40-char upstream commit sha or release:vMAJOR.MINOR.PATCH."
+          "pattern": "^[a-f0-9]{40}$",
+          "description": "Immutable 40-char upstream commit SHA at which extraction was performed. Tags are mutable; never put a tag ref here. Use `release_tag` for human-readable release labels."
+        },
+        "release_tag": {
+          "type": ["string", "null"],
+          "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.]+)?$",
+          "description": "Optional upstream release tag (e.g. 'v0.1.0-rc') corresponding to `commit`, recorded for human readability. The commit SHA is what NOTICE.md links to."
         },
         "bbox": {
           "type": "object",
@@ -212,8 +255,15 @@
         },
         "background": {
           "type": "string",
-          "enum": ["original", "white", "transparent"],
-          "description": "Whether the crop preserves the page background, has been bleached to white, or has an alpha channel."
+          "enum": [
+            "original",
+            "white",
+            "black",
+            "gray",
+            "binarized",
+            "transparent"
+          ],
+          "description": "Background of the crop. `original` preserves source pixels; named colors mean the background has been bleached to that color; `binarized` is a 1-bit map; `transparent` requires an alpha channel (PNG/WebP/TIFF only — enforced by the schema)."
         }
       }
     },
@@ -236,7 +286,8 @@
         },
         "tool_version": {
           "type": "string",
-          "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.]+)?$"
+          "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?(?:\\+[A-Za-z0-9.-]+)?$",
+          "description": "SemVer or `git describe --tags` output. Accepts prerelease (-rc1), build metadata (+build.5), and git-describe distance/hash (-3-gabc1234)."
         },
         "method": {
           "type": "string",
@@ -257,7 +308,7 @@
     },
     "rights": {
       "type": "object",
-      "description": "Inherited from the upstream scan entry; the crop is a derivative.",
+      "description": "Inherited from the upstream scan entry; the crop is a derivative. The validator cross-checks `rights_basis` against `license_expression` via LICENSE_BASIS_MAP.",
       "required": [
         "rights_basis",
         "license_expression",

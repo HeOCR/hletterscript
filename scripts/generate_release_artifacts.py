@@ -7,12 +7,21 @@ Emits three files at the repo root:
   - CITATION.cff      Citation File Format 1.2.0.
   - datapackage.json  Frictionless Data Package manifest.
 
-The script is fully deterministic: same indexes in, byte-identical files
-out. No datetime.now(), no random ordering, no UUIDs. `released_at` is
-derived from the most recent `extraction.extracted_at` in entries.jsonl
-so the timestamp reflects the corpus state, not when the script ran.
-When the corpus is empty, the generator falls back to
-`release_recipe.json::initial_release_date`.
+The script is fully deterministic: same indexes + recipe in,
+byte-identical files out. No datetime.now(), no random ordering, no
+UUIDs.
+
+Two timestamps with deliberately different semantics:
+
+  - `datapackage.json::released_at` = max(extraction.extracted_at)
+    across entries — the *corpus-state timestamp*. Bumps on every
+    ingest PR. When the corpus is empty it falls back to
+    `release_recipe.json::initial_release_date`.
+
+  - `CITATION.cff::date-released` = `release_recipe.json::version_released_date`
+    — the date this `version` was released. Stable per release. Bumped
+    manually on `version` bump (see docs/release_process.md). This is
+    what citations should be reproducible against.
 
 Use `--check` to verify the on-disk artefacts match what would be
 generated without touching the tree.
@@ -45,10 +54,9 @@ CITATION_PATH = REPO_ROOT / "CITATION.cff"
 DATAPACKAGE_PATH = REPO_ROOT / "datapackage.json"
 
 # Licenses whose terms require attribution. Drives both NOTICE.md
-# inclusion and the consistency check below. Keep in sync with the
-# `rights.attribution_required` enforcement in
-# `scripts/validate_indexes.py` and the inheritance table in
-# `docs/dataset_structure.md`.
+# inclusion and the consistency check below. Keep in sync with
+# scripts/validate_indexes.py::LICENSE_BASIS_MAP and the inheritance
+# table in docs/dataset_structure.md.
 ATTRIBUTION_REQUIRING_LICENSES: frozenset[str] = frozenset({
     "CC-BY-4.0",
     "CC-BY-SA-4.0",
@@ -81,6 +89,7 @@ def _load_recipe(path: Path) -> dict[str, Any]:
 
 
 def _derive_released_at(entries: list[dict[str, Any]], recipe: dict[str, Any]) -> str:
+    """Corpus-state timestamp for datapackage.json. Bumps every ingest."""
     extracted = [
         entry["extraction"]["extracted_at"]
         for entry in entries
@@ -88,9 +97,8 @@ def _derive_released_at(entries: list[dict[str, Any]], recipe: dict[str, Any]) -
     ]
     if extracted:
         return max(extracted)
-    # Empty corpus: this is the initial-setup state. Fall back to the
-    # recipe's `initial_release_date` so generation is deterministic
-    # without any entries on disk.
+    # Empty corpus: initial-setup state. Fall back to the recipe's
+    # `initial_release_date` so generation is deterministic.
     initial = recipe.get("initial_release_date")
     if not isinstance(initial, str) or not initial:
         raise SystemExit(
@@ -98,6 +106,18 @@ def _derive_released_at(entries: list[dict[str, Any]], recipe: dict[str, Any]) -
             "release_recipe.json has no initial_release_date fallback"
         )
     return initial
+
+
+def _resolve_citation_date(recipe: dict[str, Any]) -> str:
+    """Citation date for CITATION.cff. Stable per version."""
+    date = recipe.get("version_released_date")
+    if not isinstance(date, str) or not date:
+        raise SystemExit(
+            "release_recipe.json::version_released_date is missing; this is "
+            "the stable per-version release date used by CITATION.cff. Set it "
+            "when you bump `version` (see docs/release_process.md)."
+        )
+    return date
 
 
 def _license_breakdown(entries: list[dict[str, Any]]) -> dict[str, int]:
@@ -159,7 +179,11 @@ def _attribution_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(selected, key=lambda entry: entry["entry_id"])
 
 
-def _notice_stanza(entry: dict[str, Any], recipe: dict[str, Any]) -> str:
+def _notice_stanza(
+    entry: dict[str, Any],
+    recipe: dict[str, Any],
+    upstream_repo_url: str,
+) -> str:
     license_names: dict[str, str] = recipe["license_names"]
     license_urls: dict[str, str] = recipe["license_urls"]
     rights = entry["rights"]
@@ -179,7 +203,12 @@ def _notice_stanza(entry: dict[str, Any], recipe: dict[str, Any]) -> str:
     )
 
     upstream = entry["upstream"]
-    upstream_link = f"{upstream['repo']}/blob/{upstream['commit']}/data/index/entries.jsonl"
+    # `upstream.commit` is enforced as a 40-char SHA by the schema; this
+    # URL form always resolves on GitHub. Never use `release_tag` here —
+    # tags are mutable and the link must outlive tag re-pointing.
+    upstream_link = (
+        f"{upstream_repo_url}/blob/{upstream['commit']}/data/index/entries.jsonl"
+    )
 
     lines = [
         f"### {title}",
@@ -205,8 +234,7 @@ CC0 1.0 Universal. See [`LICENSE`](LICENSE) and [`LICENSE.md`](LICENSE.md) \
 for the full compound-licensing policy.
 
 Per-letter image crops are derivatives of upstream scans in \
-[HeOCR/public-domain-hand-written-hebrew-scans]\
-(https://github.com/HeOCR/public-domain-hand-written-hebrew-scans) and \
+[HeOCR/public-domain-hand-written-hebrew-scans]({upstream_repo_url}) and \
 carry per-entry rights inherited from the source page. The entries \
 listed below carry a license that requires attribution (currently \
 {license_set}). Anyone redistributing or reusing these crops must keep \
@@ -214,7 +242,7 @@ the listed credit and link to the source page on which the rights claim \
 was verified.
 
 - Corpus release: `{version}`
-- Released at: `{released_at}`
+- Released at (corpus state): `{released_at}`
 
 ## Attribution-required entries
 
@@ -234,10 +262,13 @@ def build_notice(
     entries: list[dict[str, Any]],
     recipe: dict[str, Any],
     released_at: str,
+    upstream_repo_url: str,
 ) -> str:
     required = _attribution_entries(entries)
     if required:
-        stanzas = "\n\n".join(_notice_stanza(entry, recipe) for entry in required)
+        stanzas = "\n\n".join(
+            _notice_stanza(entry, recipe, upstream_repo_url) for entry in required
+        )
     else:
         stanzas = "_No entries in this release require attribution._"
 
@@ -247,6 +278,7 @@ def build_notice(
         version=recipe["version"],
         released_at=released_at,
         stanzas=stanzas,
+        upstream_repo_url=upstream_repo_url,
     )
 
 
@@ -254,7 +286,7 @@ def build_citation(
     entries: list[dict[str, Any]],
     writers: list[dict[str, Any]],
     recipe: dict[str, Any],
-    released_at: str,
+    citation_date: str,
 ) -> str:
     license_counts = _license_breakdown(entries)
     if license_counts:
@@ -283,7 +315,7 @@ def build_citation(
         "abstract": abstract,
         "authors": [{"name": author["name"]} for author in recipe["authors"]],
         "version": recipe["version"],
-        "date-released": released_at[:10],
+        "date-released": citation_date,
         "repository-code": recipe["repository_code"],
         "url": recipe["homepage"],
         "license": recipe["metadata_license"]["spdx"],
@@ -309,6 +341,7 @@ def build_datapackage(
     writers: list[dict[str, Any]],
     recipe: dict[str, Any],
     released_at: str,
+    citation_date: str,
     entries_path: Path,
     writers_path: Path,
 ) -> dict[str, Any]:
@@ -377,9 +410,10 @@ def build_datapackage(
         "title": recipe["title"],
         "description": recipe["description"],
         "version": recipe["version"],
+        "version_released_date": citation_date,
         "released_at": released_at,
         "homepage": recipe["homepage"],
-        "upstream_repo": recipe.get("upstream_repo"),
+        "upstream_repo": recipe["upstream_repo"],
         "keywords": sorted(recipe["keywords"]),
         "contributors": [
             {"title": author["name"], "role": author.get("role", "author")}
@@ -413,6 +447,20 @@ def _serialise_json(data: dict[str, Any]) -> str:
     return json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
+def _require_recipe_fields(recipe: dict[str, Any]) -> None:
+    required = [
+        "name", "title", "version", "version_released_date",
+        "description", "homepage", "repository_code", "upstream_repo",
+        "authors", "keywords", "metadata_license",
+        "license_urls", "license_names", "schema_urls", "resources",
+    ]
+    missing = [field for field in required if field not in recipe]
+    if missing:
+        raise SystemExit(
+            f"release_recipe.json missing required field(s): {', '.join(missing)}"
+        )
+
+
 def _render(
     writers_path: Path,
     entries_path: Path,
@@ -424,32 +472,23 @@ def _render(
     _require_recipe_fields(recipe)
     _check_attribution_consistency(entries)
     released_at = _derive_released_at(entries, recipe)
+    citation_date = _resolve_citation_date(recipe)
+    upstream_repo_url = recipe["upstream_repo"]
 
     return {
-        "notice": _serialise_text(build_notice(entries, recipe, released_at)),
+        "notice": _serialise_text(
+            build_notice(entries, recipe, released_at, upstream_repo_url)
+        ),
         "citation": _serialise_text(
-            build_citation(entries, writers, recipe, released_at)
+            build_citation(entries, writers, recipe, citation_date)
         ),
         "datapackage": _serialise_json(
             build_datapackage(
-                entries, writers, recipe, released_at,
+                entries, writers, recipe, released_at, citation_date,
                 entries_path=entries_path, writers_path=writers_path,
             )
         ),
     }
-
-
-def _require_recipe_fields(recipe: dict[str, Any]) -> None:
-    required = [
-        "name", "title", "version", "description", "homepage",
-        "repository_code", "authors", "keywords", "metadata_license",
-        "license_urls", "license_names", "schema_urls", "resources",
-    ]
-    missing = [field for field in required if field not in recipe]
-    if missing:
-        raise SystemExit(
-            f"release_recipe.json missing required field(s): {', '.join(missing)}"
-        )
 
 
 def generate(

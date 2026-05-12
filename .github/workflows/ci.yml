@@ -10,13 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Pull LFS pointer files; we fetch the actual bytes in the
+          # next step so we control retry/error behaviour.
+          lfs: true
+      - name: Install Git LFS
+        run: |
+          git lfs install
+          git lfs pull
       - uses: actions/setup-python@v5
         with:
+          # Python 3.11+ is required (validate_indexes.py uses
+          # hashlib.file_digest). Pin 3.12 for stable CI; update both
+          # this line and requirements-dev.txt's header when bumping.
           python-version: "3.12"
+      - name: Check out upstream scans repo for cross-validation
+        uses: actions/checkout@v4
+        with:
+          repository: HeOCR/public-domain-hand-written-hebrew-scans
+          path: .upstream
+          lfs: false
       - name: Install dev dependencies
         run: python -m pip install -r requirements-dev.txt
-      - name: Validate JSONL indexes
-        run: python scripts/validate_indexes.py
+      - name: Validate JSONL indexes (with upstream cross-check)
+        run: python scripts/validate_indexes.py --upstream-path .upstream
       - name: Check release artefacts are up to date (run `python3 scripts/generate_release_artifacts.py` to refresh)
         run: python scripts/generate_release_artifacts.py --check
       - name: Run pytest

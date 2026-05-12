@@ -69,5 +69,6 @@
   },
   "title": "Hebrew Handwritten Per-Letter Image Dataset",
   "upstream_repo": "https://github.com/HeOCR/public-domain-hand-written-hebrew-scans",
-  "version": "0.0.0-rc"
+  "version": "0.0.0-rc",
+  "version_released_date": "2026-05-12"
 }

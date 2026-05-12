@@ -41,6 +41,7 @@ data/
 docs/
   dataset_structure.md     # This file.
   letters.md               # Canonical Hebrew letter enumeration.
+  release_process.md       # Runbook for cutting a new release.
 schemas/
   writer.schema.json
   entry.schema.json
@@ -54,12 +55,14 @@ tests/
 .github/
   workflows/
     ci.yml
+  pull_request_template.md
 ```
 
-The `data/index/*.jsonl` files are the canonical catalogs. Image bytes live
-under `data/letters/`. If the corpus grows beyond normal Git comfort, the
-image directory should be moved behind Git LFS while keeping `data/index/`
-as ordinary Git text.
+The `data/index/*.jsonl` files are the canonical catalogs. Image bytes
+live under `data/letters/` and are tracked via **Git LFS** from day one
+(see `.gitattributes`). Contributors must run `git lfs install` and
+`git lfs pull` after cloning to populate the actual image bytes; CI
+does the equivalent before validating.
 
 ## Serialization format
 
@@ -138,6 +141,16 @@ entry_id  = <writer_id>__<letter_name>__v<zero_padded_variant>
 `<variant>` is a zero-padded counter that is monotonic per
 `(writer_id, letter.name)`.
 
+### Writer disambiguation on name collisions
+
+On Latin-name collisions (e.g. two writers named "Yosef Haim"), append
+the birth year: `yosef_haim_1834`. When birth year is unknown, fall
+back to death year (`yosef_haim_d1942`), then to period start
+(`yosef_haim_p1880`), then to a provider authority ID
+(`yosef_haim_viaf12345678`). Record the rationale in
+`ingest.agent_notes` on the writer row. AGENTS.md documents the
+operational form of this rule.
+
 ## Rights model (compound, inherited from upstream)
 
 Every per-letter image is a **crop / derivative** of an upstream scan whose
@@ -173,20 +186,33 @@ Repository policy:
 
 ## Upstream cross-reference (`upstream` block)
 
-The `upstream` block in each entry is the *load-bearing* link to the source
-of truth for rights. The validator enforces:
+The `upstream` block in each entry is the *load-bearing* link to the
+source of truth for rights. The validator enforces:
 
-- `upstream.repo` must match the canonical upstream URL.
 - `upstream.source_id` and `upstream.entry_id` follow the upstream's
   `entry_id` regex.
-- `upstream.sha256` is a 64-char lowercase hex string.
-- `upstream.bbox` has `x ≥ 0`, `y ≥ 0`, `w > 0`, `h > 0`.
-- `upstream.commit` pins the upstream commit at which the extraction was
-  performed (full 40-char sha) **or** a `release:vX.Y.Z` reference.
+- `upstream.sha256` is a 64-char lowercase hex string. With
+  `--upstream-path PATH`, the validator additionally cross-checks this
+  against the live upstream entry's file SHA-256.
+- `upstream.commit` is an **immutable 40-character commit SHA** — never
+  a tag ref. Tags are mutable and re-pointable; recording one here would
+  silently change the meaning of the entry if the tag moves.
+- `upstream.release_tag` is optional and carries a human-readable tag
+  (e.g. `v0.1.0-rc`) corresponding to the commit. It is for
+  reader convenience only; NOTICE.md links and any code-level
+  resolution use `commit`.
+- `upstream.bbox` has `x ≥ 0`, `y ≥ 0`, `w > 0`, `h > 0`. With
+  `--upstream-path`, the validator also asserts `x+w ≤ width_px` and
+  `y+h ≤ height_px` against the upstream scan dimensions.
+
+The upstream repository URL itself is recorded once in
+`scripts/release_recipe.json::upstream_repo` — not duplicated on every
+entry. Both the validator and the release generator read it from
+there.
 
 If upstream re-encodes a scan and its `sha256` changes, every dependent
-crop in this repo must be re-verified — the validator will flag the
-mismatch.
+crop in this repo must be re-verified — `--upstream-path` will flag
+the mismatch.
 
 ## Ingestion flow
 
@@ -207,11 +233,22 @@ mismatch.
 6. Open a PR. The CI workflow re-runs the same checks plus
    `generate_release_artifacts.py --check`.
 
-## Release artefacts
+## Release artefacts and two-timestamp model
 
-`NOTICE.md`, `CITATION.cff`, and `datapackage.json` at the repo root are
-generated deterministically from `data/index/*.jsonl` and
-`scripts/release_recipe.json`. Do not edit them by hand. Their
-`released_at` field tracks `max(extraction.extracted_at)` across the
-entries; when the corpus is still empty (no entries), the generator falls
-back to `release_recipe.json::initial_release_date`.
+`NOTICE.md`, `CITATION.cff`, and `datapackage.json` at the repo root
+are generated deterministically from `data/index/*.jsonl` and
+`scripts/release_recipe.json`. Do not edit them by hand.
+
+The generator emits two timestamps with **deliberately different
+semantics**:
+
+| Field                                | Source                                                      | Meaning                                          |
+| ------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------ |
+| `datapackage.json::released_at`      | `max(extraction.extracted_at)` (fallback: `initial_release_date`) | *Corpus state.* Bumps every ingest PR.           |
+| `CITATION.cff::date-released`        | `release_recipe.json::version_released_date`                | *Release date of this version.* Stable per version. |
+
+Citations are pinned to the version's release date, not to the latest
+extraction. Ingest PRs are free to add data without invalidating
+existing citations. Bumping a version (and its `version_released_date`)
+is a deliberate, human-driven step — see
+[`docs/release_process.md`](release_process.md).

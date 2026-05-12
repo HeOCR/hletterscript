@@ -18,11 +18,30 @@
     "ingest"
   ],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": ["verified", "rejected"]
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "references": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
   "properties": {
     "writer_id": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
-      "description": "Stable lowercase slug. Used as the foreign key from entries.jsonl and as the path component in data/letters/<writer_id>/."
+      "description": "Stable lowercase slug. On Latin-name collision (e.g. two writers named 'Yosef Haim'), disambiguate by appending the birth year: `yosef_haim_1834`. If the birth year is unknown, use death year; if both are unknown, use the start year of `period`. Document the disambiguation in `ingest.agent_notes`."
     },
     "status": {
       "type": "string",
@@ -103,7 +122,7 @@
     },
     "references": {
       "type": "array",
-      "minItems": 1,
+      "description": "Biographical evidence. `candidate` and `needs_review` writers may have zero references; `verified` and `rejected` writers must have at least one (enforced by the conditional at the top of this schema).",
       "items": {
         "type": "object",
         "required": ["kind", "citation"],

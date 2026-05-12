@@ -2,6 +2,7 @@
   "name": "hletterscript",
   "title": "Hebrew Handwritten Per-Letter Image Dataset",
   "version": "0.0.0-rc",
+  "version_released_date": "2026-05-12",
   "initial_release_date": "2026-05-12T00:00:00Z",
   "description": "Per-letter image crops of handwritten Hebrew letters, grouped into sets by writer. Each crop is a derivative of a permissively-licensed upstream scan in HeOCR/public-domain-hand-written-hebrew-scans, with per-image rights inherited and attribution recorded. The index is line-oriented JSON (JSONL).",
   "homepage": "https://github.com/HeOCR/hletterscript",

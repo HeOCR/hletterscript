@@ -60,9 +60,18 @@ extraction provenance, and quality measurements. CSV/Parquet/SQLite
 exports can be generated later as derived artefacts; the source of
 truth stays line-oriented, diffable, streamable JSON.
 
+## Requirements
+
+- **Python ≥ 3.11** (the validator uses `hashlib.file_digest`).
+  CI pins 3.12.
+- **Git LFS** — image bytes under `data/letters/**` are tracked via
+  LFS (see `.gitattributes`). After cloning, run `git lfs install`
+  once, then `git lfs pull` to fetch the actual image bytes.
+
 Run the current validation check with:
 
 ```bash
+git lfs install && git lfs pull
 python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate_indexes.py
 python3 scripts/generate_release_artifacts.py --check
