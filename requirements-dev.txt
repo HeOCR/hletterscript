@@ -1,0 +1,7 @@
+# Development dependencies for hletterscript validators, release tooling,
+# and tests. Requires Python >= 3.11 (validate_indexes.py uses
+# hashlib.file_digest, which was added in 3.11). CI pins 3.12.
+jsonschema>=4.0,<5
+pytest>=8.0,<9
+PyYAML>=6,<7
+frictionless>=5,<6

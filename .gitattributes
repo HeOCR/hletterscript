@@ -1,0 +1,28 @@
+# Per-letter image crops are tracked with Git LFS. This keeps regular
+# git operations fast and the repository clone size sane as the corpus
+# grows (per-writer × 27 letter forms × multiple variants accumulates
+# quickly even at 10–50 KB per crop).
+#
+# After cloning, run `git lfs install` once, then `git lfs pull` to
+# fetch the actual image bytes. CI does this automatically before the
+# validator runs (see .github/workflows/ci.yml).
+data/letters/**/*.png  filter=lfs diff=lfs merge=lfs -text
+data/letters/**/*.jpg  filter=lfs diff=lfs merge=lfs -text
+data/letters/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+data/letters/**/*.webp filter=lfs diff=lfs merge=lfs -text
+data/letters/**/*.tif  filter=lfs diff=lfs merge=lfs -text
+data/letters/**/*.tiff filter=lfs diff=lfs merge=lfs -text
+
+# Force LF line endings on text files so checksums and diffs are stable
+# across macOS/Linux/Windows contributors.
+*.md         text eol=lf
+*.json       text eol=lf
+*.jsonl      text eol=lf
+*.yml        text eol=lf
+*.yaml       text eol=lf
+*.py         text eol=lf
+*.cff        text eol=lf
+*.txt        text eol=lf
+.gitignore   text eol=lf
+.gitattributes text eol=lf
+LICENSE      text eol=lf
