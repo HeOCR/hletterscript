@@ -36,7 +36,7 @@
   "released_at": "2026-05-12T22:30:00Z",
   "resources": [
     {
-      "bytes": 12732,
+      "bytes": 14820,
       "description": "Per-letter image index. One JSON object per cropped letter image, with upstream provenance, extraction provenance, file checksums, and inherited rights.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -44,7 +44,7 @@
       "name": "entries",
       "path": "data/index/entries.jsonl",
       "profile": "data-resource",
-      "record_count": 6
+      "record_count": 7
     },
     {
       "bytes": 1506,
@@ -65,21 +65,22 @@
   "stats": {
     "attribution_required_count": 0,
     "entry_writer_count": 1,
-    "image_byte_count": 19576,
+    "image_byte_count": 22227,
     "letter_breakdown": {
       "bet": 1,
-      "dalet": 1,
-      "he": 1,
       "kaf": 1,
       "lamed": 1,
-      "vav": 1
+      "mem": 1,
+      "resh": 1,
+      "tav": 1,
+      "yod": 1
     },
     "license_breakdown": {
-      "PDM-1.0": 6
+      "PDM-1.0": 7
     },
-    "record_count": 6,
+    "record_count": 7,
     "writer_breakdown": {
-      "chaim_nachman_bialik": 6
+      "chaim_nachman_bialik": 7
     },
     "writer_record_count": 1,
     "writer_status_breakdown": {
