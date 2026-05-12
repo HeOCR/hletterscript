@@ -3,7 +3,7 @@ cff-version: 1.2.0
 message: Please cite this dataset using the metadata below.
 type: dataset
 title: Hebrew Handwritten Per-Letter Image Dataset
-abstract: 'Per-letter image crops of handwritten Hebrew letters, grouped into sets by writer. Each crop is a derivative of a permissively-licensed upstream scan in HeOCR/public-domain-hand-written-hebrew-scans, with per-image rights inherited and attribution recorded. The index is line-oriented JSON (JSONL). Release 0.0.0-rc is the initial-setup release: the corpus contains no per-letter image entries yet. The repository ships the schemas, validation tooling, CI, and licensing policy needed to start ingesting.'
+abstract: Per-letter image crops of handwritten Hebrew letters, grouped into sets by writer. Each crop is a derivative of a permissively-licensed upstream scan in HeOCR/public-domain-hand-written-hebrew-scans, with per-image rights inherited and attribution recorded. The index is line-oriented JSON (JSONL). Release 0.0.0-rc contains 6 per-letter image entries drawn from 1 verified writers (6 PDM-1.0).
 authors:
 - name: Shay Palachy-Affek
 version: 0.0.0-rc

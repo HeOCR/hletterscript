@@ -23,14 +23,20 @@
       "path": "https://creativecommons.org/publicdomain/zero/1.0/",
       "scope": "metadata",
       "title": "Creative Commons Zero v1.0 Universal"
+    },
+    {
+      "name": "PDM-1.0",
+      "path": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "scope": "images",
+      "title": "Public Domain Mark 1.0"
     }
   ],
   "name": "hletterscript",
   "profile": "data-package",
-  "released_at": "2026-05-12T00:00:00Z",
+  "released_at": "2026-05-12T22:30:00Z",
   "resources": [
     {
-      "bytes": 0,
+      "bytes": 12732,
       "description": "Per-letter image index. One JSON object per cropped letter image, with upstream provenance, extraction provenance, file checksums, and inherited rights.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -38,10 +44,10 @@
       "name": "entries",
       "path": "data/index/entries.jsonl",
       "profile": "data-resource",
-      "record_count": 0
+      "record_count": 6
     },
     {
-      "bytes": 0,
+      "bytes": 1506,
       "description": "Writer-level catalog. One JSON object per writer; each writer defines a 'set' of letter images.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -49,7 +55,7 @@
       "name": "writers",
       "path": "data/index/writers.jsonl",
       "profile": "data-resource",
-      "record_count": 0
+      "record_count": 1
     }
   ],
   "schemas": {
@@ -58,14 +64,27 @@
   },
   "stats": {
     "attribution_required_count": 0,
-    "entry_writer_count": 0,
-    "image_byte_count": 0,
-    "letter_breakdown": {},
-    "license_breakdown": {},
-    "record_count": 0,
-    "writer_breakdown": {},
-    "writer_record_count": 0,
-    "writer_status_breakdown": {}
+    "entry_writer_count": 1,
+    "image_byte_count": 19576,
+    "letter_breakdown": {
+      "bet": 1,
+      "dalet": 1,
+      "he": 1,
+      "kaf": 1,
+      "lamed": 1,
+      "vav": 1
+    },
+    "license_breakdown": {
+      "PDM-1.0": 6
+    },
+    "record_count": 6,
+    "writer_breakdown": {
+      "chaim_nachman_bialik": 6
+    },
+    "writer_record_count": 1,
+    "writer_status_breakdown": {
+      "verified": 1
+    }
   },
   "title": "Hebrew Handwritten Per-Letter Image Dataset",
   "upstream_repo": "https://github.com/HeOCR/public-domain-hand-written-hebrew-scans",
