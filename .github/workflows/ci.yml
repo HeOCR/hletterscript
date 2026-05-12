@@ -8,6 +8,10 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,10 +24,8 @@ jobs:
           git lfs pull
       - uses: actions/setup-python@v5
         with:
-          # Python 3.11+ is required (validate_indexes.py uses
-          # hashlib.file_digest). Pin 3.12 for stable CI; update both
-          # this line and requirements-dev.txt's header when bumping.
-          python-version: "3.12"
+          # Python 3.11+ is required (validate_indexes.py uses hashlib.file_digest).
+          python-version: ${{ matrix.python-version }}
       - name: Check out upstream scans repo for cross-validation
         uses: actions/checkout@v4
         with:
