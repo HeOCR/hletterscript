@@ -38,10 +38,10 @@
   ],
   "name": "hletterscript",
   "profile": "data-package",
-  "released_at": "2026-05-13T21:01:19Z",
+  "released_at": "2026-05-13T21:37:46Z",
   "resources": [
     {
-      "bytes": 95725,
+      "bytes": 92837,
       "description": "Per-letter image index. One JSON object per cropped letter image, with upstream provenance, extraction provenance, file checksums, and inherited rights.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -49,10 +49,10 @@
       "name": "entries",
       "path": "data/index/entries.jsonl",
       "profile": "data-resource",
-      "record_count": 49
+      "record_count": 48
     },
     {
-      "bytes": 3057,
+      "bytes": 3382,
       "description": "Writer-level catalog. One JSON object per writer; each writer defines a 'set' of letter images.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -70,7 +70,7 @@
   "stats": {
     "attribution_required_count": 0,
     "entry_writer_count": 2,
-    "image_byte_count": 75195,
+    "image_byte_count": 70340,
     "letter_breakdown": {
       "alef": 2,
       "ayin": 2,
@@ -95,17 +95,17 @@
       "tet": 1,
       "tsadi": 1,
       "vav": 2,
-      "yod": 3,
+      "yod": 2,
       "zayin": 2
     },
     "license_breakdown": {
       "LicenseRef-Public-Domain-Israel": 18,
-      "PDM-1.0": 31
+      "PDM-1.0": 30
     },
-    "record_count": 49,
+    "record_count": 48,
     "writer_breakdown": {
       "chaim_nachman_bialik": 25,
-      "rachel_bluwstein": 24
+      "rachel_bluwstein": 23
     },
     "writer_record_count": 2,
     "writer_status_breakdown": {
