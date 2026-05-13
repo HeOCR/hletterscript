@@ -38,10 +38,10 @@
   ],
   "name": "hletterscript",
   "profile": "data-package",
-  "released_at": "2026-05-13T10:00:00Z",
+  "released_at": "2026-05-13T21:01:19Z",
   "resources": [
     {
-      "bytes": 48555,
+      "bytes": 95725,
       "description": "Per-letter image index. One JSON object per cropped letter image, with upstream provenance, extraction provenance, file checksums, and inherited rights.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -49,10 +49,10 @@
       "name": "entries",
       "path": "data/index/entries.jsonl",
       "profile": "data-resource",
-      "record_count": 25
+      "record_count": 49
     },
     {
-      "bytes": 1506,
+      "bytes": 3057,
       "description": "Writer-level catalog. One JSON object per writer; each writer defines a 'set' of letter images.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -60,7 +60,7 @@
       "name": "writers",
       "path": "data/index/writers.jsonl",
       "profile": "data-resource",
-      "record_count": 1
+      "record_count": 2
     }
   ],
   "schemas": {
@@ -69,43 +69,47 @@
   },
   "stats": {
     "attribution_required_count": 0,
-    "entry_writer_count": 1,
-    "image_byte_count": 25613,
+    "entry_writer_count": 2,
+    "image_byte_count": 75195,
     "letter_breakdown": {
-      "alef": 1,
-      "ayin": 1,
-      "bet": 2,
-      "he": 1,
-      "het": 1,
-      "kaf": 1,
-      "lamed": 2,
-      "mem": 1,
+      "alef": 2,
+      "ayin": 2,
+      "bet": 3,
+      "dalet": 1,
+      "gimel": 1,
+      "he": 2,
+      "het": 2,
+      "kaf": 2,
+      "lamed": 4,
+      "mem": 3,
       "mem_final": 1,
-      "nun": 1,
-      "nun_final": 1,
+      "nun": 2,
+      "nun_final": 2,
       "pe": 1,
       "pe_final": 1,
-      "qof": 1,
-      "resh": 1,
-      "samekh": 1,
-      "shin": 1,
-      "tav": 2,
+      "qof": 2,
+      "resh": 2,
+      "samekh": 2,
+      "shin": 2,
+      "tav": 3,
+      "tet": 1,
       "tsadi": 1,
-      "vav": 1,
-      "yod": 1,
-      "zayin": 1
+      "vav": 2,
+      "yod": 3,
+      "zayin": 2
     },
     "license_breakdown": {
       "LicenseRef-Public-Domain-Israel": 18,
-      "PDM-1.0": 7
+      "PDM-1.0": 31
     },
-    "record_count": 25,
+    "record_count": 49,
     "writer_breakdown": {
-      "chaim_nachman_bialik": 25
+      "chaim_nachman_bialik": 25,
+      "rachel_bluwstein": 24
     },
-    "writer_record_count": 1,
+    "writer_record_count": 2,
     "writer_status_breakdown": {
-      "verified": 1
+      "verified": 2
     }
   },
   "title": "Hebrew Handwritten Per-Letter Image Dataset",
