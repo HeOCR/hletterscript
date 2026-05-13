@@ -7,7 +7,7 @@ Repository-authored metadata is dedicated to the public domain under CC0 1.0 Uni
 Per-letter image crops are derivatives of upstream scans in [HeOCR/public-domain-hand-written-hebrew-scans](https://github.com/HeOCR/public-domain-hand-written-hebrew-scans) and carry per-entry rights inherited from the source page. The entries listed below carry a license that requires attribution (currently CC-BY-4.0, CC-BY-SA-4.0). Anyone redistributing or reusing these crops must keep the listed credit and link to the source page on which the rights claim was verified.
 
 - Corpus release: `0.0.0-rc`
-- Released at (corpus state): `2026-05-12T22:30:00Z`
+- Released at (corpus state): `2026-05-13T10:00:00Z`
 
 ## Attribution-required entries
 
