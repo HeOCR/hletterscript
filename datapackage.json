@@ -25,6 +25,11 @@
       "title": "Creative Commons Zero v1.0 Universal"
     },
     {
+      "name": "LicenseRef-Public-Domain-Israel",
+      "scope": "images",
+      "title": "Public Domain (Israel; life + 70)"
+    },
+    {
       "name": "PDM-1.0",
       "path": "https://creativecommons.org/publicdomain/mark/1.0/",
       "scope": "images",
@@ -33,10 +38,10 @@
   ],
   "name": "hletterscript",
   "profile": "data-package",
-  "released_at": "2026-05-12T22:30:00Z",
+  "released_at": "2026-05-13T10:00:00Z",
   "resources": [
     {
-      "bytes": 14820,
+      "bytes": 48555,
       "description": "Per-letter image index. One JSON object per cropped letter image, with upstream provenance, extraction provenance, file checksums, and inherited rights.",
       "encoding": "utf-8",
       "format": "jsonl",
@@ -44,7 +49,7 @@
       "name": "entries",
       "path": "data/index/entries.jsonl",
       "profile": "data-resource",
-      "record_count": 7
+      "record_count": 25
     },
     {
       "bytes": 1506,
@@ -65,22 +70,38 @@
   "stats": {
     "attribution_required_count": 0,
     "entry_writer_count": 1,
-    "image_byte_count": 22227,
+    "image_byte_count": 25613,
     "letter_breakdown": {
-      "bet": 1,
+      "alef": 1,
+      "ayin": 1,
+      "bet": 2,
+      "he": 1,
+      "het": 1,
       "kaf": 1,
-      "lamed": 1,
+      "lamed": 2,
       "mem": 1,
+      "mem_final": 1,
+      "nun": 1,
+      "nun_final": 1,
+      "pe": 1,
+      "pe_final": 1,
+      "qof": 1,
       "resh": 1,
-      "tav": 1,
-      "yod": 1
+      "samekh": 1,
+      "shin": 1,
+      "tav": 2,
+      "tsadi": 1,
+      "vav": 1,
+      "yod": 1,
+      "zayin": 1
     },
     "license_breakdown": {
+      "LicenseRef-Public-Domain-Israel": 18,
       "PDM-1.0": 7
     },
-    "record_count": 7,
+    "record_count": 25,
     "writer_breakdown": {
-      "chaim_nachman_bialik": 7
+      "chaim_nachman_bialik": 25
     },
     "writer_record_count": 1,
     "writer_status_breakdown": {
