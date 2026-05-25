@@ -1,9 +1,9 @@
 # Licensing Policy
 
 This repository is structured for compound licensing — the same model used
-by [HeOCR/public-domain-hand-written-hebrew-scans][upstream].
+by [HeOCR/hash][upstream].
 
-[upstream]: https://github.com/HeOCR/public-domain-hand-written-hebrew-scans
+[upstream]: https://github.com/HeOCR/hash
 
 ## Repository-authored metadata
 
@@ -32,7 +32,7 @@ material is separately released under compatible terms.
 ## Per-letter image crops
 
 Per-letter image bytes are **derivatives** of upstream scans hosted in
-[HeOCR/public-domain-hand-written-hebrew-scans][upstream]. They are not
+[HeOCR/hash][upstream]. They are not
 automatically covered by the metadata license. Each crop carries its own
 entry-level rights record in `data/index/entries.jsonl`:
 

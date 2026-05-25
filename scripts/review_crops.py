@@ -113,7 +113,7 @@ def _build_html(entries: list[dict], upstream_root: Path | None) -> str:
 <div class="scan-block">
   <h2>Upstream scan: <code>{upstream_entry_id}</code></h2>
   <p class="warn">Upstream scan not found locally. Run with
-  <code>--upstream-path /path/to/public-domain-hand-written-hebrew-scans</code>
+  <code>--upstream-path /path/to/hash</code>
   to display it.</p>
 </div>
 """
@@ -391,7 +391,7 @@ class _Handler(http.server.BaseHTTPRequestHandler):
 def main() -> None:
     ap = argparse.ArgumentParser(description="Serve a crop-review page locally.")
     ap.add_argument("--upstream-path", metavar="PATH",
-                    help="Path to a clone of HeOCR/public-domain-hand-written-hebrew-scans")
+                    help="Path to a clone of HeOCR/hash")
     ap.add_argument("--output", metavar="FILE",
                     help="Write the HTML to this file instead of serving it")
     ap.add_argument("--port", type=int, default=8765,

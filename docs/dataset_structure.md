@@ -10,7 +10,7 @@ document or scan written by that writer.
 
 The corpus is the *downstream* product of two upstream things:
 
-- [HeOCR/public-domain-hand-written-hebrew-scans] is the canonical source
+- [HeOCR/hash] is the canonical source
   of page-level scans. Every per-letter image entry in this repo cites
   the upstream scan (`source_id`, `entry_id`, `sha256`) it was cut from.
 - [HeOCR/hletterscriptgen] is the framework that turns those page scans
@@ -21,7 +21,7 @@ The intended downstream consumers are synthetic-document generators
 ([HeOCR/hocrsyngen]) and the synthetic / real Hebrew handwriting datasets
 they feed into ([HeOCR/HeOCRsynth], [HeOCR/HeOCR]).
 
-[HeOCR/public-domain-hand-written-hebrew-scans]: https://github.com/HeOCR/public-domain-hand-written-hebrew-scans
+[HeOCR/hash]: https://github.com/HeOCR/hash
 [HeOCR/hletterscriptgen]: https://github.com/HeOCR/hletterscriptgen
 [HeOCR/hocrsyngen]: https://github.com/HeOCR/hocrsyngen
 [HeOCR/HeOCRsynth]: https://github.com/HeOCR/HeOCRsynth
@@ -155,7 +155,7 @@ operational form of this rule.
 
 Every per-letter image is a **crop / derivative** of an upstream scan whose
 rights have already been recorded in
-`public-domain-hand-written-hebrew-scans/data/index/entries.jsonl`.
+`hash/data/index/entries.jsonl`.
 Repository policy:
 
 - **Repository-authored metadata** in this repo is dedicated to the public

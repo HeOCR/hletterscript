@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/HeOCR/hletterscript/schemas/entry.schema.json",
   "title": "Handwritten Hebrew Per-Letter Image Entry",
-  "description": "One row per cropped per-letter image. Each entry is a derivative of a specific upstream scan in HeOCR/public-domain-hand-written-hebrew-scans.",
+  "description": "One row per cropped per-letter image. Each entry is a derivative of a specific upstream scan in HeOCR/hash.",
   "type": "object",
   "required": [
     "entry_id",
@@ -175,7 +175,7 @@
     },
     "upstream": {
       "type": "object",
-      "description": "Reference back to the scan in HeOCR/public-domain-hand-written-hebrew-scans this crop was extracted from. The upstream repository URL is recorded once in scripts/release_recipe.json (`upstream_repo`); it is not duplicated on every entry.",
+      "description": "Reference back to the scan in HeOCR/hash this crop was extracted from. The upstream repository URL is recorded once in scripts/release_recipe.json (`upstream_repo`); it is not duplicated on every entry.",
       "required": ["source_id", "entry_id", "sha256", "commit", "bbox"],
       "additionalProperties": false,
       "properties": {

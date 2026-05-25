@@ -29,7 +29,7 @@ jobs:
       - name: Check out upstream scans repo for cross-validation
         uses: actions/checkout@v4
         with:
-          repository: HeOCR/public-domain-hand-written-hebrew-scans
+          repository: HeOCR/hash
           path: .upstream
           lfs: false
       - name: Install dev dependencies

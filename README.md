@@ -7,7 +7,7 @@ cut from different scans by that writer.
 
 This repository is the downstream of:
 
-- [HeOCR/public-domain-hand-written-hebrew-scans][upstream] — the
+- [HeOCR/hash][upstream] (HASH — Hebrew Archive of Scanned Handwriting) — the
   canonical, permissively-licensed source of page-level scans. Every
   entry here cites its upstream scan.
 - [HeOCR/hletterscriptgen][gen] — the framework that turns page scans
@@ -19,7 +19,7 @@ The intended downstream consumers are synthetic-document generators
 corpora they feed into ([HeOCR/HeOCRsynth][heocrsynth],
 [HeOCR/HeOCR][heocr]).
 
-[upstream]: https://github.com/HeOCR/public-domain-hand-written-hebrew-scans
+[upstream]: https://github.com/HeOCR/hash
 [gen]: https://github.com/HeOCR/hletterscriptgen
 [syngen]: https://github.com/HeOCR/hocrsyngen
 [heocrsynth]: https://github.com/HeOCR/HeOCRsynth
