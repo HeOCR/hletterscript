@@ -234,7 +234,7 @@ CC0 1.0 Universal. See [`LICENSE`](LICENSE) and [`LICENSE.md`](LICENSE.md) \
 for the full compound-licensing policy.
 
 Per-letter image crops are derivatives of upstream scans in \
-[HeOCR/public-domain-hand-written-hebrew-scans]({upstream_repo_url}) and \
+[HeOCR/hash]({upstream_repo_url}) and \
 carry per-entry rights inherited from the source page. The entries \
 listed below carry a license that requires attribution (currently \
 {license_set}). Anyone redistributing or reusing these crops must keep \

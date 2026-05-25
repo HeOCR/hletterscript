@@ -5,7 +5,7 @@
       "title": "Shay Palachy-Affek"
     }
   ],
-  "description": "Per-letter image crops of handwritten Hebrew letters, grouped into sets by writer. Each crop is a derivative of a permissively-licensed upstream scan in HeOCR/public-domain-hand-written-hebrew-scans, with per-image rights inherited and attribution recorded. The index is line-oriented JSON (JSONL).",
+  "description": "Per-letter image crops of handwritten Hebrew letters, grouped into sets by writer. Each crop is a derivative of a permissively-licensed upstream scan in HeOCR/hash, with per-image rights inherited and attribution recorded. The index is line-oriented JSON (JSONL).",
   "homepage": "https://github.com/HeOCR/hletterscript",
   "keywords": [
     "Hebrew",
@@ -113,7 +113,7 @@
     }
   },
   "title": "Hebrew Handwritten Per-Letter Image Dataset",
-  "upstream_repo": "https://github.com/HeOCR/public-domain-hand-written-hebrew-scans",
+  "upstream_repo": "https://github.com/HeOCR/hash",
   "version": "0.0.0-rc",
   "version_released_date": "2026-05-12"
 }

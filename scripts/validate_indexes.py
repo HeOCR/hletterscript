@@ -392,7 +392,7 @@ def _load_upstream_entries(upstream_root: Path) -> dict[str, dict[str, Any]]:
         raise SystemExit(_err(
             upstream_entries_path, None, None,
             "upstream entries.jsonl not found; --upstream-path must point at a clone of "
-            "public-domain-hand-written-hebrew-scans",
+            "hash",
         ))
     by_id: dict[str, dict[str, Any]] = {}
     with upstream_entries_path.open("r", encoding="utf-8") as handle:
@@ -493,7 +493,7 @@ def main() -> None:
         type=Path,
         default=None,
         help=(
-            "Path to a local clone of HeOCR/public-domain-hand-written-hebrew-scans. "
+            "Path to a local clone of HeOCR/hash. "
             "When set, the validator additionally cross-checks each entry's "
             "upstream.sha256 against the upstream file record and verifies "
             "upstream.bbox fits inside the upstream scan dimensions."

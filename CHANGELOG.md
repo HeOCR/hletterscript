@@ -20,7 +20,7 @@ licensing policy needed to start ingesting.
 
 - Writer-level (`schemas/writer.schema.json`) and entry-level
   (`schemas/entry.schema.json`) record contracts. Each entry references
-  an upstream scan in `HeOCR/public-domain-hand-written-hebrew-scans`
+  an upstream scan in `HeOCR/hash`
   by `source_id`, `entry_id`, `sha256` (mutable-tag-free), `commit`
   (40-char SHA), and `bbox`.
 - `scripts/validate_indexes.py`: schema validation, referential

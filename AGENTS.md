@@ -11,7 +11,7 @@ policy.
 A dataset of **sets of per-letter images of handwritten Hebrew letters**,
 grouped by writer. Each set = one person/scribe. Each per-letter image
 is a **crop** of a permissively-licensed upstream scan from
-[HeOCR/public-domain-hand-written-hebrew-scans][upstream], with rights
+[HeOCR/hash][upstream], with rights
 inherited and recorded per image. Canonical layout, schema motivation,
 and ingestion model live in [`docs/dataset_structure.md`]\
 (docs/dataset_structure.md). The Hebrew letter enumeration is in
@@ -22,7 +22,7 @@ per-image rights inheritance) is described in
 [`schemas/entry.schema.json`](schemas/entry.schema.json). The release
 runbook is [`docs/release_process.md`](docs/release_process.md).
 
-[upstream]: https://github.com/HeOCR/public-domain-hand-written-hebrew-scans
+[upstream]: https://github.com/HeOCR/hash
 
 ## First-time setup
 
@@ -72,7 +72,7 @@ against the live upstream entry records:
 
 ```bash
 python3 scripts/validate_indexes.py \
-  --upstream-path ../public-domain-hand-written-hebrew-scans
+  --upstream-path ../hash
 ```
 
 CI checks out the upstream repo as a sibling and runs the validator with
