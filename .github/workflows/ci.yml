@@ -30,6 +30,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: HeOCR/hash
+          # Pin to the latest upstream commit referenced by the current
+          # hletterscript indexes so cross-validation stays reproducible
+          # even if HASH later removes or renames source entries.
+          ref: 0e162a78d609a47858c460431be3d689b2e9e31e
           path: .upstream
           lfs: false
       - name: Install dev dependencies
