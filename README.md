@@ -54,14 +54,14 @@ Related projects:
 - [HeOCR/hletterscriptgen][gen] produces the letter crops.
 - [HeOCR/hocrsyngen][syngen] consumes this repository for synthetic
   document generation.
-- [HeOCR/HeOCRsynth][heocrsynth] and [HeOCR/HeOCR][heocr] are intended
+- [HeOCR/HeOCRsynth][heocrsynth] and [HeOCR/heocr-datasets][heocr] are intended
   downstream OCR/HTR targets.
 
 [upstream]: https://github.com/HeOCR/hash
 [gen]: https://github.com/HeOCR/hletterscriptgen
 [syngen]: https://github.com/HeOCR/hocrsyngen
 [heocrsynth]: https://github.com/HeOCR/HeOCRsynth
-[heocr]: https://github.com/HeOCR/HeOCR
+[heocr]: https://github.com/HeOCR/heocr-datasets
 
 ## Dataset Layout
 
