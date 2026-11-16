@@ -19,13 +19,13 @@ The corpus is the *downstream* product of two upstream things:
 
 The intended downstream consumers are synthetic-document generators
 ([HeOCR/hocrsyngen]) and the synthetic / real Hebrew handwriting datasets
-they feed into ([HeOCR/HeOCRsynth], [HeOCR/HeOCR]).
+they feed into ([HeOCR/HeOCRsynth], [HeOCR/heocr-datasets]).
 
 [HeOCR/hash]: https://github.com/HeOCR/hash
 [HeOCR/hletterscriptgen]: https://github.com/HeOCR/hletterscriptgen
 [HeOCR/hocrsyngen]: https://github.com/HeOCR/hocrsyngen
 [HeOCR/HeOCRsynth]: https://github.com/HeOCR/HeOCRsynth
-[HeOCR/HeOCR]: https://github.com/HeOCR/HeOCR
+[HeOCR/heocr-datasets]: https://github.com/HeOCR/heocr-datasets
 
 ## Recommended repository layout
 
